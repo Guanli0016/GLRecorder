@@ -1,24 +1,18 @@
-import IEncoder from "../interfaces/iencoder";
-import { IRecorderConfig } from "../interfaces/irecorder";
+import IEncoder from "../interfaces/IEncoder";
+import { IRecorderConfig } from "../interfaces/IRecorder";
 
 class Mp3Encoder implements IEncoder {
 
-    config: IRecorderConfig;
+    private lame: lamejs.Mp3Encoder;
+    private config: IRecorderConfig;
 
-    lame: any;
-    output: Int8Array[];
-
-    constructor( lame: any, output: Int8Array[], config: IRecorderConfig ) {
+    constructor( lame: lamejs.Mp3Encoder, config: IRecorderConfig ) {
         this.lame = lame;
-        this.output = output;
         this.config = config;
     }
+ 
+    encode( target: any, buffers: Float32Array[] ): void {
 
-    write( buffers: number[][] ): void {
-
-    }
-    encode( buffers: number[][] ): void {
-        
         let samplesLeft: Int16Array, samplesRight: Int16Array | null = null;
 
         samplesLeft = this.convertBuffer( buffers[0] );
@@ -36,12 +30,13 @@ class Mp3Encoder implements IEncoder {
                 right = samplesRight.subarray( i, i + max );
             }
             let mp3buf: any = this.lame.encodeBuffer( left, right );
-            this.output.push( new Int8Array( mp3buf ) );
+            target.push( new Int8Array( mp3buf ) );
             remaining -= max;
         }
+
     }
 
-    private convertBuffer( buffer: number[] ): Int16Array {
+    private convertBuffer( buffer: Float32Array ): Int16Array {
 
         let data: Float32Array;
 
@@ -58,17 +53,16 @@ class Mp3Encoder implements IEncoder {
 
         }
 
-        let out: Int16Array = new Int16Array( data.length );
-        this.floatTo16BitPCM( data, out );
-        return out;
-
+        return this.floatTo16BitPCM( data );
     }
 
-    private floatTo16BitPCM( input: Float32Array, output: Int16Array ): void {
+    private floatTo16BitPCM( input: Float32Array ): Int16Array {
+        let output: Int16Array = new Int16Array( input.length );
         for ( let i: number = 0; i < input.length; i++ ) {
             let s: number = Math.max( -1, Math.min( 1, input[i] ) );
             output[i] = ( s < 0 ? s * 0x8000 : s * 0x7FFF );
         }
+        return output;
     }
 }
 

@@ -24,20 +24,17 @@ export enum Mime {
 }
 
 export enum StatusCode {
-
     SUCCESS = 0,
     NOT_SUPPORT = -1,
     NOT_FOUNDED = -2,
     NOT_ALLOWED = -3,
     ERROR = -9,
-    
 }
-export enum StatusMessage {
 
+export enum StatusMessage {
     SUCCESS = '打开麦克风成功',
     NOT_SUPPORT = '浏览器不支持录音功能',
     NOT_FOUNDED = '找不到麦克风',
     NOT_ALLOWED = '麦克风被禁止使用',
     ERROR = '打开麦克风出现异常',
-    
 }

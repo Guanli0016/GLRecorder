@@ -1,6 +1,5 @@
 interface IEncoder {
-    write( buffers: number[][] ): void;
-    encode( buffers: number[][] ): void;
+    encode( param1: any, param2: any ): any;
 }
 
 export default IEncoder;

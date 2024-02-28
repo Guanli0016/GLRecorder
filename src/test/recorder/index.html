@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>修改后的测试</title>
-    <script src="../dist/GLRecorder.js"></script>
+    <title>原始录音的测试</title>
+    <script src="./arivoc.recorder.js"></script>
 </head>
 <body>
     <button id="init" onclick="init()">初始化</button>
-    <button id="start" onclick="start()">开始</button>
+    <button id="start" onclick="startMp3()">开始Mp3</button>
+    <button id="start" onclick="startWave()">开始Wave</button>
     <button id="stop" onclick="stop()">停止</button>
     <br>
     <textarea id="output"></textarea>
@@ -24,20 +25,22 @@
 
     <script>
 
-        let rec = new GLRecorder({
+        let rec = new ArivocRecorder({
             numChannels: 1
         });
 
         function init() {
-            rec.init().then(code => {
+            rec.initialize(function(code) {
                 console.log(code);
-            }).catch(err => {
-                console.log(err);
             });
         }
 
-        function start() {
+        function startMp3() {
             rec.start("mp3");
+        }
+        
+        function startWave() {
+            rec.start();
         }
 
         function stop() {
