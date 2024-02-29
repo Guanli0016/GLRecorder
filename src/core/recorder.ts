@@ -4,8 +4,6 @@ import RecorderConfig from "./Config";
 import { root } from "../globals/Root";
 import { RecorderData } from "../defined/Types";
 
-import axios from 'axios';
-
 class GLRecorder implements IRecorder {
 
     private _data: RecorderData | null = null;
@@ -134,6 +132,8 @@ class GLRecorder implements IRecorder {
                 if ( evt.data.cmd === 'finished' ) {
                     this._data = {
                         blob: evt.data.blob,
+                        size: evt.data.blob.size,
+                        type: evt.data.blob.type,
                         duration: this.endTime - this.startTime
                     };
                     resolve( this._data );
@@ -175,19 +175,19 @@ class GLRecorder implements IRecorder {
             let formdata: FormData = new FormData();
             formdata.append( 'file', this._data.blob as Blob );
 
-            Object.keys( extra ).forEach(( key: string ) => {
-                formdata.append( key, extra[ key ] );
-            });
-        
-            axios.post( url, formdata, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(( res: any ) => {
-                resolve( res );
-            }).catch(( error: any ) => {
-                reject( error );
+            if ( !!extra ) {
+                Object.keys( extra ).forEach(( key: string ) => {
+                    formdata.append( key, extra[ key ] );
+                });
+            }
+            
+            fetch( url, {
+                method: "POST",
+                body: formdata
             })
+            .then(( response: Response ) => response.json())
+            .then(( data: any ) => resolve( data ))
+            .catch(( error: any ) => reject( error ));
         });
     }
     save( name: string = 'audio' ): Promise<any> {
