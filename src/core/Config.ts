@@ -11,9 +11,11 @@ class RecorderConfig implements IRecorderConfig {
     private _numChannels: number;
     private _defaultSampleRate: number;
 
+    private object: any;
+
     constructor( defaultSR: number, options?: IRecorderOption ) {
 
-        let config = options?.config;
+        let config = options;
         
         if ( !!config?.sampleRate && !( config.sampleRate in Samples ) ) {
             throw new Error( `参数config.sampleRate的值不支持，支持的值有${ enumValues( Samples ).join(', ') }` );
@@ -35,16 +37,17 @@ class RecorderConfig implements IRecorderConfig {
         this._sampleRate = config?.sampleRate || this._defaultSampleRate;
         this._bitRate = config?.bitRate || defaultBitRate;
         this._numChannels = config?.numChannels || defaultNumChannels;
+        this._kbps = this._sampleRate * this._bitRate * this._numChannels / 1000;
+        // this._kbps = 128;
 
-        // this._kbps = this._sampleRate * this._bitRate * this._numChannels / 1000;
-        this._kbps = 128;
-
-        console.log( 'kbps:', this._kbps );
-        console.log( 'bufferSize:', this._bufferSize );
-        console.log( 'sampleRate:', this._sampleRate );
-        console.log( 'bitRate:', this._bitRate );
-        console.log( 'numChannels:', this._numChannels );
-        console.log( 'defaultSampleRate:', this._defaultSampleRate );
+        this.object = {
+            kbps: this._kbps,
+            bufferSize: this._bufferSize,
+            sampleRate: this._sampleRate,
+            bitRate: this._bitRate,
+            numChannels: this._numChannels,
+            defaultSampleRate: this._defaultSampleRate,
+        }
 
     }
 

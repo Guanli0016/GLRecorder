@@ -9,7 +9,7 @@ import { IRecorderConfig, IRecorderOutputBuffer } from "../interfaces/IRecorder"
     self.addEventListener( 'message', ( evt: MessageEvent ) => {
         switch ( evt.data.cmd ) {
             case 'init':
-                init( evt.data.config );
+                init( evt.data.config.object );
                 break;
             case 'start':
                 start( evt.data.mime );
@@ -39,7 +39,7 @@ import { IRecorderConfig, IRecorderOutputBuffer } from "../interfaces/IRecorder"
         outputBuffer.init( mime );
     }
 
-    function encode( datas: any ): void {
+    function encode( datas: Float32Array[] ): void {
         outputBuffer.write( datas );
     }
 

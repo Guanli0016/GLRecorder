@@ -10,6 +10,7 @@ class WaveEncoder implements IEncoder {
     }
 
     encode( buffer: Float32Array[][], size: number ): DataView {
+        
         let buffers: Float32Array[] = [];
         for ( let channel: number = 0; channel < this.config.numChannels; channel++ ) {
             buffers.push( this.mergeBuffers( buffer[ channel ], size ) );

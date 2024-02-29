@@ -4,6 +4,8 @@ import RecorderConfig from "./Config";
 import { root } from "../globals/Root";
 import { RecorderData } from "../defined/Types";
 
+import axios from 'axios';
+
 class GLRecorder implements IRecorder {
 
     private _data: RecorderData | null = null;
@@ -11,18 +13,19 @@ class GLRecorder implements IRecorder {
     private _recording: boolean = false;
 
     private options: IRecorderOption | undefined;
-    private context: AudioContext;
-    private config: IRecorderConfig;
+    private context?: AudioContext;
+    private config?: IRecorderConfig;
     private worker: Worker;
 
     private startTime: number = 0;
     private endTime: number = 0;
 
+    private inputAudio?: MediaStreamAudioSourceNode;
+    private processor?: ScriptProcessorNode;
+
     constructor( options?: IRecorderOption ) {
         this.options = options;
         this.worker = new Worker( root + "recorder-worker.js" );
-        this.context = new AudioContext();
-        this.config = new RecorderConfig( this.context.sampleRate, options );
     }
 
     get data(): RecorderData | null {
@@ -56,20 +59,18 @@ class GLRecorder implements IRecorder {
                     return;
                 }
 
-                let inputAudio: MediaStreamAudioSourceNode = this.context.createMediaStreamSource( micstream );
+                this.inputAudio = this.context?.createMediaStreamSource( micstream );
 
-                let volume: GainNode = this.context.createGain();
-                inputAudio.connect( volume );
+                let volume: GainNode | undefined = this.context?.createGain();
+                this.inputAudio?.connect( volume as GainNode );
 
-                let processor: ScriptProcessorNode = this.context.createScriptProcessor( this.config.bufferSize, this.config.numChannels, this.config.numChannels );
-                inputAudio.connect( processor );
+                this.processor = this.context?.createScriptProcessor( this.config?.bufferSize, this.config?.numChannels, this.config?.numChannels );
+                this.inputAudio?.connect( this.processor as ScriptProcessorNode );
 
-                processor.addEventListener( 'audioprocess', ( evt: AudioProcessingEvent ) => {
+                this.processor?.addEventListener( 'audioprocess', ( evt: AudioProcessingEvent ) => {
                     this.onAudioProcess( evt );
                 });
                 
-                processor.connect( this.context.destination );
-
                 this._ready = true;
 
                 this.worker.postMessage({ cmd: 'init', config: this.config });
@@ -107,6 +108,8 @@ class GLRecorder implements IRecorder {
                 reject( 'GLRecorder未初始化，请先调用GLRecorder.init()' );
                 return;
             }
+            
+            this.processor?.connect(( this.context as AudioContext ).destination );
 
             this.startTime = Date.now();
             this.worker.postMessage({ cmd: 'start', mime: mime });
@@ -139,13 +142,19 @@ class GLRecorder implements IRecorder {
             });
             this.worker.postMessage({ cmd: 'stop' });
             this.endTime = Date.now();
+            this.processor?.disconnect();
 
         });
 
     }
     clear(): Promise<void> {
 
-        return new Promise<void>(( resolve ) => {
+        return new Promise<void>(( resolve, reject ) => {
+
+            if ( this._recording ) {
+                reject( '正在录音中，不能执行此操作' );
+                return;
+            }
 
             this._data = null;
             this.startTime = 0;
@@ -155,14 +164,45 @@ class GLRecorder implements IRecorder {
         });
 
     }
-    upload(): Promise<any> {
+    upload( url: string, extra: { [ key: string ]: any } ): Promise<any> {
         return new Promise<any>(( resolve, reject ) => {
-            
+
+            if ( !this._data || !this._data.blob ) {
+                reject( '目标文件不存在，请先录音' );
+                return;
+            }
+
+            let formdata: FormData = new FormData();
+            formdata.append( 'file', this._data.blob as Blob );
+
+            Object.keys( extra ).forEach(( key: string ) => {
+                formdata.append( key, extra[ key ] );
+            });
+        
+            axios.post( url, formdata, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(( res: any ) => {
+                resolve( res );
+            }).catch(( error: any ) => {
+                reject( error );
+            })
         });
     }
-    save(): Promise<any> {
+    save( name: string = 'audio' ): Promise<any> {
         return new Promise<any>(( resolve, reject ) => {
+            if ( !this._data || !this._data.blob ) {
+                reject( '没有可保存的录音' );
+                return;
+            }
             
+            let url = URL.createObjectURL( this._data.blob );
+            let a = document.createElement( 'a' );
+            a.href = url;
+            a.download = this._data.blob.type.replace( /audio\//, name + '.' );
+            a.click();
+            resolve( url );
         });
     }
     
@@ -171,9 +211,8 @@ class GLRecorder implements IRecorder {
     }
 
     private onAudioProcess( evt: AudioProcessingEvent ) {
-        if ( !this._recording ) return;
         var channelDatas: Float32Array[] = [];
-        for ( let channel = 0; channel < this.config.numChannels; channel++ ) {
+        for ( let channel = 0; channel < ( this.config as IRecorderConfig ).numChannels; channel++ ) {
             let buffer: Float32Array = evt.inputBuffer.getChannelData( channel );
             channelDatas.push( buffer );
         }

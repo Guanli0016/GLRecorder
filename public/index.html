@@ -8,7 +8,8 @@
 </head>
 <body>
     <button id="init" onclick="init()">初始化</button>
-    <button id="start" onclick="start()">开始</button>
+    <button id="start" onclick="startMp3()">开始Mp3</button>
+    <button id="start" onclick="startWav()">开始Wave</button>
     <button id="stop" onclick="stop()">停止</button>
     <br>
     <textarea id="output"></textarea>
@@ -41,7 +42,7 @@
         }
 
         function stop() {
-            rec.stop(function(blob) {
+            rec.stop().then(blob => {
                 console.log(blob);
             })
         }

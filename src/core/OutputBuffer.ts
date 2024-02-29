@@ -6,8 +6,7 @@ import { IRecorderConfig, IRecorderOutputBuffer } from "../interfaces/IRecorder"
 
 class OutputBuffer implements IRecorderOutputBuffer {
 
-    private _size: number = 0;
-
+    private size: number = 0;
     private mime: Mime = Mime.WAVE;
     private buffer: any;
     private lame: lamejs.Mp3Encoder;
@@ -19,12 +18,8 @@ class OutputBuffer implements IRecorderOutputBuffer {
         this.config = config;
     }
 
-    get size(): number {
-        return this._size;
-    }
-
     init( mime: Mime = Mime.WAVE ): void {
-        this._size = 0;
+        this.size = 0;
         this.mime = mime;
         this.buffer = this.createBuffer( this.mime );
         this.encoder = this.createEncoder( this.mime );
@@ -41,7 +36,7 @@ class OutputBuffer implements IRecorderOutputBuffer {
             this.buffer.push( new Int8Array( this.lame.flush() ) );
             return new Blob( this.buffer, { type: 'audio/mp3' } );
         } else {
-            let view: DataView = this.encoder?.encode( this.buffer, this._size );
+            let view: DataView = this.encoder?.encode( this.buffer, this.size );
             return new Blob( [ view ], { type: 'audio/wav' } );
         }
     }
@@ -52,9 +47,9 @@ class OutputBuffer implements IRecorderOutputBuffer {
 
     private writeWave( buffers: Float32Array[] ): void {
         for ( let channel = 0; channel < this.config.numChannels; channel++ ) {
-            this.buffer[ channel ].push( buffers[channel] );
+            this.buffer[ channel ].push( buffers[ channel ] );
         }
-        this._size += buffers[0].length;
+        this.size += buffers[ 0 ].length;
     }
 
     private createEncoder( mime: Mime = Mime.WAVE ): IEncoder {
@@ -67,9 +62,15 @@ class OutputBuffer implements IRecorderOutputBuffer {
 
     private createBuffer( mime: Mime = Mime.WAVE ): any {
         if ( mime === Mime.MP3 ) {
-            return new Array();
+            let buffers: Float32Array[] = new Array<Float32Array>();
+            return buffers;
         } else {
-            return new Array( this.config.numChannels ).fill( [] );
+            let buffers: Float32Array[][] = new Array<Float32Array[]>( this.config.numChannels );
+            for ( let channel: number = 0; channel < this.config.numChannels; channel++ ) {
+                let buffer: Float32Array[] = new Array<Float32Array>();
+                buffers[ channel ] = buffer;
+            }
+            return buffers;
         }
     }
 }

@@ -11,29 +11,17 @@ export interface IRecorder {
     start( mime: Mime ): Promise<void>
     stop(): Promise<RecorderData>
     clear(): Promise<void>
-    upload(): Promise<any>
-    save(): Promise<any>
+    upload( url: string, extra: { [ key: string ]: any } ): Promise<any>
+    save( name: string ): Promise<any>
     
 }
 
 export interface IRecorderOption {
 
-    config?: {
-        bitRate?: number
-        sampleRate?: number
-        numChannels?: number
-    }
-
-    upload?: {
-        url: string
-        data: () => ({ [ key: string ]: any })
-        auto: boolean
-    }
-
-    skin?: {
-        url: string
-    }
-
+    bitRate?: number
+    sampleRate?: number
+    numChannels?: number
+    
 }
 
 export interface IRecorderConfig {
@@ -55,8 +43,6 @@ export interface IRecorderStatus {
 }
 
 export interface IRecorderOutputBuffer {
-
-    get size(): number
 
     init( mime: Mime ): void
     write( buffers: Float32Array[] ): void
