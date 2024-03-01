@@ -1,8 +1,9 @@
 import { Mime, StatusCode, StatusMessage } from "../defined/Preset";
 import { IRecorder, IRecorderConfig, IRecorderOption, IRecorderStatus } from "../interfaces/IRecorder";
 import RecorderConfig from "./Config";
-import { root } from "../globals/Root";
+import root from "../globals/Root";
 import { RecorderData } from "../defined/Types";
+import { appendToFormData } from "../utils/Format";
 
 class GLRecorder implements IRecorder {
 
@@ -175,17 +176,13 @@ class GLRecorder implements IRecorder {
             let formdata: FormData = new FormData();
             formdata.append( 'file', this._data.blob as Blob );
 
-            if ( !!extra ) {
-                Object.keys( extra ).forEach(( key: string ) => {
-                    formdata.append( key, extra[ key ] );
-                });
-            }
-            
+            appendToFormData( formdata, extra );
+
             fetch( url, {
                 method: "POST",
                 body: formdata
             })
-            .then(( response: Response ) => response.json())
+            .then(( response: Response ) => response )
             .then(( data: any ) => resolve( data ))
             .catch(( error: any ) => reject( error ));
         });

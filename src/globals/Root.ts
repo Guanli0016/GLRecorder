@@ -1,3 +1,10 @@
 let currentSrc: string | undefined = document.currentScript?.src;
 
-export let root = currentSrc?.substring( 0, currentSrc.lastIndexOf( '/' ) + 1 );
+let root: string = '';
+if ( !currentSrc ) {
+    root = './';
+} else {
+    root = currentSrc?.substring( 0, currentSrc.lastIndexOf( '/' ) + 1 );
+}
+
+export default root;
