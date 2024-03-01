@@ -3,6 +3,7 @@ import ts from 'rollup-plugin-typescript2';
 import { dts } from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
+import serve from 'rollup-plugin-serve';
 
 export default [
     {
@@ -27,6 +28,10 @@ export default [
         plugins: [
             ts(),
             babel({ babelHelpers: 'bundled' }),
+            serve({
+                contentBase: ['dist'],
+                port: 6600
+            }),
         ]
     }, {
         input: './src/workers/RecorderWorker.ts',
