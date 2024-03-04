@@ -8,7 +8,7 @@ export default [
     {
         input: './src/core/Recorder.ts',
         output: {
-            file: path.resolve(__dirname, './dev/GLRecorder.min.js'),
+            file: path.resolve(__dirname, './test/GLRecorder.min.js'),
             format: 'umd',
             name: 'GLRecorder'
         },
@@ -20,7 +20,7 @@ export default [
     }, {
         input: './src/core/Recorder.ts',
         output: {
-            file: path.resolve(__dirname, './dev/GLRecorder.js'),
+            file: path.resolve(__dirname, './test/GLRecorder.js'),
             format: 'umd',
             name: 'GLRecorder'
         },
@@ -28,14 +28,14 @@ export default [
             ts(),
             babel({ babelHelpers: 'bundled' }),
             serve({
-                contentBase: ['dev'],
+                contentBase: ['test'],
                 port: 6600
             }),
         ]
     }, {
         input: './src/workers/RecorderWorker.ts',
         output: {
-            file: path.resolve(__dirname, './dev/recorder-worker.js'),
+            file: path.resolve(__dirname, './test/recorder-worker.js'),
             format: 'es',
         },
         plugins: [
@@ -46,7 +46,7 @@ export default [
     }, {
         input: './node_modules/lamejs/lame.min.js',
         output: {
-            file: path.resolve(__dirname, './dev/lame.min.js'),
+            file: path.resolve(__dirname, './test/lame.min.js'),
             format: 'es',
         },
         plugins: [ ]

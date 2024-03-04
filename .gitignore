@@ -90,6 +90,7 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+dev
 
 # Gatsby files
 .cache/
@@ -131,3 +132,4 @@ dist
 
 src/recorder
 src/test
+test/
