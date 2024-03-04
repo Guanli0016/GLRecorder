@@ -38,7 +38,6 @@ class RecorderConfig implements IRecorderConfig {
         this._bitRate = config?.bitRate || defaultBitRate;
         this._numChannels = config?.numChannels || defaultNumChannels;
         this._kbps = this._sampleRate * this._bitRate * this._numChannels / 1000;
-        // this._kbps = 128;
 
         this.object = {
             kbps: this._kbps,

@@ -27,18 +27,31 @@ class GLRecorder implements IRecorder {
         this.worker = new Worker( root + "recorder-worker.js" );
     }
 
+    /**
+     * 录音数据
+     */
     get data(): RecorderData | null {
         return this._data;
     }
 
+    /**
+     * 录音器初始化状态
+     */
     get ready(): boolean {
         return this._ready;
     }
 
+    /**
+     * 录音器是否正在录制中
+     */
     get recording(): boolean {
         return this._recording;
     }
 
+    /**
+     * 初始化录音器（唤起用户授权弹窗）
+     * @returns 录音器初始化状态
+     */
     init(): Promise<IRecorderStatus> {
 
         return new Promise<IRecorderStatus>(( resolve, reject ) => {
@@ -95,6 +108,11 @@ class GLRecorder implements IRecorder {
         });
     }
 
+    /**
+     * 开始录音
+     * @param mime 录音格式 'mp3' 录制MP3格式的录音 'wave'（默认） 录制WAVE格式的录音
+     * @returns 
+     */
     start( mime: Mime = Mime.WAVE ): Promise<void> {
 
         return new Promise<void>(( resolve, reject ) => {
@@ -119,6 +137,11 @@ class GLRecorder implements IRecorder {
         })
 
     }
+
+    /**
+     * 停止录音
+     * @returns 录音数据
+     */
     stop(): Promise<RecorderData> {
 
         return new Promise<RecorderData>(( resolve ) => {
@@ -148,6 +171,11 @@ class GLRecorder implements IRecorder {
         });
 
     }
+
+    /**
+     * 清空录音数据
+     * @returns 
+     */
     clear(): Promise<void> {
 
         return new Promise<void>(( resolve, reject ) => {
@@ -165,6 +193,13 @@ class GLRecorder implements IRecorder {
         });
 
     }
+
+    /**
+     * 上传录音数据到指定地址
+     * @param url 需要上传的接口地址
+     * @param extra 附加的额外参数 { a: 1, b: 2, c: 3 }
+     * @returns 接口响应数据
+     */
     upload( url: string, extra: { [ key: string ]: any } ): Promise<any> {
         return new Promise<any>(( resolve, reject ) => {
 
@@ -187,6 +222,12 @@ class GLRecorder implements IRecorder {
             .catch(( error: any ) => reject( error ));
         });
     }
+
+    /**
+     * 把录音数据保存到本地
+     * @param name 要保存的文件名 默认 'audio'
+     * @returns 录音缓存文件地址
+     */
     save( name: string = 'audio' ): Promise<any> {
         return new Promise<any>(( resolve, reject ) => {
             if ( !this._data || !this._data.blob ) {
@@ -203,6 +244,11 @@ class GLRecorder implements IRecorder {
         });
     }
     
+    /**
+     * GLRecorder.support()
+     * 判断浏览器是否支持录音功能
+     * @returns true 支持录音 false 不支持录音
+     */
     static support(): boolean {
         return !!AudioContext;
     }
