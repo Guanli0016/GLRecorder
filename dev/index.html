@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试文件</title>
+</head>
+<body>
+    <button onclick="init()">初始化</button>
+    <button onclick="startMp3()">开始Mp3</button>
+    <button onclick="startWave()">开始Wave</button>
+    <button onclick="stop()">停止</button>
+    <button onclick="clear1()">清空</button>
+    <button onclick="play()">播放</button>
+    <button onclick="pause()">暂停</button>
+    <button onclick="upload()">上传</button>
+    <button onclick="save()">保存</button>
+    <audio id="audio"></audio>
+    <br>
+    <div id="output"></div>
+    
+    <style>
+        p {
+            margin: 5px 0;
+        }
+        #output {
+            width: 400px;
+            height: 600px;
+            box-sizing: border-box;
+            padding: 5px;
+            border: 1px solid #333;
+            resize: none;
+            overflow-y: auto;
+        }
+    </style>
+
+    <script src="GLRecorder.min.js"></script>
+    <script>
+    
+        let recorder = new GLRecorder({
+            numChannels: 1,
+            sampleRate: 16000,
+            bitRate: 16,
+        });
+
+        function init() {
+            recorder.init()
+            .then(code => console.log(code))
+            .catch(err => console.log(err));
+        }
+
+        function startMp3() {
+            recorder.start('mp3')
+            .then(data => console.log('开始录制Mp3'))
+            .catch(err => console.log(err));
+        }
+        function startWave() {
+            recorder.start()
+            .then(data => console.log('开始录制Wave'))
+            .catch(err => console.log(err));
+        }
+
+        function stop() {
+            recorder.stop().then(data => console.log('录音数据：', data));
+        }
+
+        function clear1() {
+            recorder.clear().then(data => console.log('清空录音数据'));
+        }
+
+        function upload() {
+            recorder.upload('/', { a: 1, b: 2, c: 3 })
+            .then(data => data.text().then(text => console.log('上传成功：', text)))
+            .catch(err => console.log('上传失败：', err))
+        }
+        function save() {
+            recorder.save()
+            .then(data => console.log('保存成功：', data))
+            .catch(err => console.log('保存失败：', err))
+        }
+
+        function play() {
+            var url = URL.createObjectURL( recorder.data.blob );
+            audio.src = url;
+            audio.play();
+        }
+        function pause() {
+            audio.pause();
+        }
+
+        function log(message) {
+            let p = document.createElement('p');
+            p.innerText = message;
+            output.appendChild(p);
+        }
+
+    </script>
+
+</body>
+</html>

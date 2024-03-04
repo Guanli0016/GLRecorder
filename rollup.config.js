@@ -1,6 +1,5 @@
 import path from 'path';
 import ts from 'rollup-plugin-typescript2';
-import { dts } from 'rollup-plugin-dts';
 import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
 
@@ -15,17 +14,6 @@ export default [
         plugins: [
             ts(),
             terser(),
-            babel({ babelHelpers: 'bundled' }),
-        ]
-    }, {
-        input: './src/core/Recorder.ts',
-        output: {
-            file: path.resolve(__dirname, './dist/GLRecorder.js'),
-            format: 'umd',
-            name: 'GLRecorder'
-        },
-        plugins: [
-            ts(),
             babel({ babelHelpers: 'bundled' }),
         ]
     }, {
@@ -46,14 +34,5 @@ export default [
             format: 'es',
         },
         plugins: [ ]
-    }, {
-        input: './src/core/Recorder.ts',
-        output: {
-            file: path.resolve(__dirname, './dist/GLRecorder.d.ts'),
-            format: 'es',
-        },
-        plugins: [
-            dts()
-        ]
     }
 ]

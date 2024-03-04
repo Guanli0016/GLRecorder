@@ -1,19 +1,21 @@
 {
   "name": "glrecorder",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "H5录音器 支持mp3 wave格式的录音",
   "main": "dist/GLRecorder.min.js",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
-    "dev": "npx rollup -c rollup.config.dev.js -w --bundleConfigAsCjs",
+    "dev": "rollup -c rollup.config.dev.js -w --bundleConfigAsCjs",
     "build": "rollup -c rollup.config.js --bundleConfigAsCjs"
   },
   "keywords": [
     "录音",
     "recorder",
     "mp3",
+    "wav",
     "wave"
   ],
   "author": "Guanli",
@@ -32,7 +34,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "glrecorder": "^1.0.0",
     "lamejs": "^1.2.1"
   }
 }

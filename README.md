@@ -100,7 +100,9 @@ recorder.upload('/upload', { a: 1, b: 2, c: 3 })
     .then(res => res.json().then(data => console.log('上传成功：', data)))
     .catch(err => console.log('上传失败：', err))
 ```
-> save() 保存录音数据
+> save( name ) 保存录音数据
+
+    name 保存的录音名称 （默认 'audio'）
 ```
 recorder.save()
     .then(data => console.log('保存成功：', data))
