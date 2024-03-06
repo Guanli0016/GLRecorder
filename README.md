@@ -3,6 +3,13 @@ H5录音器 支持mp3 wave格式的录音
 
 浏览器环境下使用
 
+## npm
+```
+npm i glrecorder
+
+import GLRecorder from 'glrecorder';
+```
+
 ## script
 ```
 <script type="text/javascript" src="GLRecorder.min.js"></script>

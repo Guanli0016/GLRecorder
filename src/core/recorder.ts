@@ -113,11 +113,12 @@ class GLRecorder implements IRecorder {
      * @param mime 录音格式 'mp3' 录制MP3格式的录音 'wave'（默认） 录制WAVE格式的录音
      * @returns 
      */
-    start( mime: Mime = Mime.WAVE ): Promise<void> {
+    start( mime: Mime | string = Mime.WAVE ): Promise<void> {
 
         return new Promise<void>(( resolve, reject ) => {
 
             if ( this._recording ) {
+                reject( '正在录音中，不能执行此操作' );
                 return;
             }
 
@@ -144,9 +145,10 @@ class GLRecorder implements IRecorder {
      */
     stop(): Promise<RecorderData> {
 
-        return new Promise<RecorderData>(( resolve ) => {
+        return new Promise<RecorderData>(( resolve, reject ) => {
 
             if ( !this._recording ) {
+                reject( '录音未开启，不能执行此操作' );
                 return;
             }
 
