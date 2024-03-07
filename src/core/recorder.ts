@@ -66,11 +66,6 @@ class GLRecorder implements IRecorder {
 
             navigator.mediaDevices.getUserMedia({ audio: true }).then(( micstream: MediaStream ) => {
 
-                if ( this.ready ) {
-                    resolve({ code: StatusCode.SUCCESS, message: StatusMessage.SUCCESS });
-                    return;
-                }
-
                 this.inputAudio = this.context?.createMediaStreamSource( micstream );
 
                 let volume: GainNode | undefined = this.context?.createGain();

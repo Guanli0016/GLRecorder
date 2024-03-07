@@ -6,7 +6,6 @@
     <title>测试文件</title>
 </head>
 <body>
-    <script src="test/GLRecorder.js"></script>
     
     <button onclick="init()">初始化</button>
     <button onclick="startMp3()">开始MP3</button>
@@ -36,12 +35,26 @@
         }
     </style>
 
+    <!-- <script type="module">
+
+        import GLRecorder from './test/GLRecorder.esm.js';
+
+        let recorder = new GLRecorder({
+            numChannels: 1,
+            sampleRate: 16000,
+        });
+
+        console.log( recorder );
+
+    </script> -->
+
+    <script src="test/GLRecorder.min.js"></script>
     <script>
 
         let recorder = new GLRecorder({
             numChannels: 1,
             sampleRate: 16000,
-        })
+        });
 
         let init = () => {
             recorder.init()
@@ -94,7 +107,6 @@
             });
             logger.scrollTop = logger.scrollHeight;
         }
-
     </script>
 </body>
 </html>

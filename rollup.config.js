@@ -17,6 +17,17 @@ export default [
             babel({ babelHelpers: 'bundled' }),
         ]
     }, {
+        input: './src/core/Recorder.ts',
+        output: {
+            file: path.resolve(__dirname, './dist/GLRecorder.esm.js'),
+            format: 'es',
+        },
+        plugins: [
+            ts(),
+            terser(),
+            babel({ babelHelpers: 'bundled' }),
+        ]
+    }, {
         input: './src/workers/RecorderWorker.ts',
         output: {
             file: path.resolve(__dirname, './dist/recorder-worker.js'),
