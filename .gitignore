@@ -130,6 +130,4 @@ dev
 .yarn/install-state.gz
 .pnp.*
 
-src/recorder
-src/test
 test/

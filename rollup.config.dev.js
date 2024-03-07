@@ -28,7 +28,7 @@ export default [
             ts(),
             babel({ babelHelpers: 'bundled' }),
             serve({
-                contentBase: ['test'],
+                contentBase: [''],
                 port: 6600
             }),
         ]

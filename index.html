@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试文件</title>
+</head>
+<body>
+    <script src="test/GLRecorder.js"></script>
+    
+    <button onclick="init()">初始化</button>
+    <button onclick="startMp3()">开始MP3</button>
+    <button onclick="startWave()">开始WAVE</button>
+    <button onclick="stop()">停止</button>
+    <button onclick="clears()">清空</button>
+    <button onclick="upload()">上传</button>
+    <button onclick="save()">保存</button>
+    <br>
+    <audio id="player" controls></audio>
+    <br>
+    <div id="logger"></div>
+
+    <style>
+        p {
+            margin: 0;
+        }
+        #logger {
+            width: 350px;
+            height: 600px;
+            box-sizing: border-box;
+            padding: 5px;
+            border: 1px solid #333;
+            font-size: 12px;
+            line-height: 20px;
+            overflow-y: auto;
+        }
+    </style>
+
+    <script>
+
+        let recorder = new GLRecorder({
+            numChannels: 1,
+            sampleRate: 16000,
+        })
+
+        let init = () => {
+            recorder.init()
+                .then( data => log( data ) )
+                .catch( error => log( error ) );
+        }
+        let startMp3 = () => {
+            recorder.start('mp3')
+                .then( data => log( '开始录制mp3' ) )
+                .catch( error => log( error ) );
+        }
+        let startWave = () => {
+            recorder.start()
+                .then( data => log( '开始录制wave' ) )
+                .catch( error => log( error ) );
+        }
+        let stop = () => {
+            recorder.stop()
+                .then( data => log( '录音数据', data ) )
+                .catch( error => log( error ) );
+        }
+        let clears = () => {
+            recorder.clear()
+                .then( data => log( '清空录音数据' ) )
+                .catch( error => log( error ) );
+        }
+        let upload = () => {
+            recorder.upload('/', { a: 1, b: 2, c: 3 })
+                .then( data => data.text().then( text => log( text ) ) )
+                .catch( error => log( error ) );
+        }
+        let save = () => {
+            recorder.save()
+                .then( data => log( '保存录音成功' ) )
+                .catch( error => log( error ) );
+        }
+
+        let log = ( ...messages ) => {
+            messages.forEach( value => {
+                let p = document.createElement('p');
+                value = typeof value === 'string' ? value : JSON.stringify( value );
+                p.innerText = value;
+                logger.appendChild( p );
+            });
+            logger.scrollTop = logger.scrollHeight;
+        }
+
+    </script>
+</body>
+</html>

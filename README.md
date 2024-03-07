@@ -37,7 +37,7 @@ let recorder = new GLRecorder({
     { 
         blob: 录音数据Blob, 
         type: 录音格式（"audio/mp3, audio/wav"）, 
-        size: 录音大小（b）, 
+        size: 录音大小（B）, 
         duration: 录音时长（ms） 
     }
 
