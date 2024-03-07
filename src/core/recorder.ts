@@ -250,6 +250,7 @@ class GLRecorder implements IRecorder {
         return !!AudioContext;
     }
 
+    /** 采集麦克风数据 */
     private onAudioProcess( evt: AudioProcessingEvent ) {
         var channelDatas: Float32Array[] = [];
         for ( let channel = 0; channel < ( this.config as IRecorderConfig ).numChannels; channel++ ) {
