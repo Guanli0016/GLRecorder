@@ -60,12 +60,18 @@
         }
         let stop = () => {
             recorder.stop()
-                .then( data => log( '录音数据', data ) )
+                .then( data => { 
+                    log( '录音数据', data );
+                    player.src = URL.createObjectURL( data.blob );
+                })
                 .catch( error => log( error ) );
         }
         let clears = () => {
             recorder.clear()
-                .then( data => log( '清空录音数据' ) )
+                .then( data => { 
+                    log( '清空录音数据' );
+                    player.src = "";
+                })
                 .catch( error => log( error ) );
         }
         let upload = () => {
