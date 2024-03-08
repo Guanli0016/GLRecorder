@@ -18,6 +18,7 @@
     <audio id="player" controls></audio>
     <br>
     <div id="logger"></div>
+    <button onclick="clearLog()">清空log</button>
 
     <style>
         p {
@@ -89,7 +90,7 @@
         }
         let upload = () => {
             recorder.upload('/', { a: 1, b: 2, c: 3 })
-                .then( data => data.text().then( text => log( text ) ) )
+                .then( data => data.text().then( text => log( '上传成功' ) ) )
                 .catch( error => log( error ) );
         }
         let save = () => {
@@ -106,6 +107,10 @@
                 logger.appendChild( p );
             });
             logger.scrollTop = logger.scrollHeight;
+        }
+
+        let clearLog = () => {
+            logger.innerHTML = "";
         }
     </script>
 </body>

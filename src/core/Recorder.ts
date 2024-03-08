@@ -247,7 +247,7 @@ class GLRecorder implements IRecorder {
      * @returns true 支持录音 false 不支持录音
      */
     static support(): boolean {
-        return !!AudioContext;
+        return !!navigator.mediaDevices && !!AudioContext;
     }
 
     /** 采集麦克风数据 */

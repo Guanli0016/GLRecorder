@@ -297,8 +297,9 @@ class GLRecorder {
      * @returns true 支持录音 false 不支持录音
      */
     static support() {
-        return !!AudioContext;
+        return !!navigator.mediaDevices && !!AudioContext;
     }
+    /** 采集麦克风数据 */
     onAudioProcess(evt) {
         var channelDatas = [];
         for (let channel = 0; channel < this.config.numChannels; channel++) {

@@ -1,7 +1,7 @@
 # GLRecorder
 H5录音器 支持mp3 wave格式的录音
 
-浏览器环境下使用
+浏览器环境下使用（必须在localhost/127.0.0.1或https环境下使用）
 
 ## npm
 ```
